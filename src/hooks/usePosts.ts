@@ -1,12 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useEffect } from "react";
-import { IData } from "../types/post.types";
+import { IPost } from "../types/post.types";
 
 const fetchData = async () => {
-  const URL = "https://jsonplaceholder.typicode.com/posts/";
+  const URL = "https://jsonplaceholder.typicode.com/posts";
 
-  return axios.get<IData[]>(URL);
+  return axios.get<IPost[]>(URL);
+};
+
+const initialData: { data: IPost[] } = {
+  data: [
+    {
+      title: "Hello World!",
+      id: 1,
+      userId: "1",
+      body: "This is body!",
+    },
+  ],
 };
 
 export function usePosts(isAuth: boolean) {
@@ -15,6 +26,7 @@ export function usePosts(isAuth: boolean) {
     queryFn: fetchData,
     select: (data) => data.data,
     enabled: isAuth,
+    initialData: initialData,
   });
 
   useEffect(() => {
