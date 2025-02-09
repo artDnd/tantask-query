@@ -1,23 +1,11 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import usePostById from "./hooks/usePostById";
+import usePostCreated from "./hooks/usePostCreated";
 import usePosts from "./hooks/usePosts";
-import axios from "axios";
-import { IPost } from "./types/post.types";
 
 const isAuth = true;
 function App() {
-  const queryClient = useQueryClient();
-
-  const { isPending, mutate } = useMutation({
-    mutationKey: ["add post"],
-    mutationFn: async (newPost: Omit<IPost, "id">) =>
-      axios.post("https://jsonplaceholder.typicode.com/posts", newPost),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["posts"] }),
-  });
-
-  const { data } = usePosts(isAuth);
-  const { post, isLoading } = usePostById(1);
-  console.log(post);
+  const { data, isLoading } = usePosts(isAuth);
+  const { isPending, mutate } = usePostCreated();
+  // const { post, isLoading } = usePostById(1);
   return (
     <>
       <div>

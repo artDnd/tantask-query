@@ -1,13 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { useEffect } from "react";
 import { IPost } from "../types/post.types";
-
-const fetchData = async () => {
-  const URL = "https://jsonplaceholder.typicode.com/posts";
-
-  return axios.get<IPost[]>(URL);
-};
+import { postService } from "../services/post.service";
 
 const initialData: { data: IPost[] } = {
   data: [
@@ -21,9 +15,9 @@ const initialData: { data: IPost[] } = {
 };
 
 export function usePosts(isAuth: boolean) {
-  const { data, isSuccess, isError } = useQuery({
+  const { data, isSuccess, isError, isLoading } = useQuery({
     queryKey: ["posts"],
-    queryFn: fetchData,
+    queryFn: postService.getPosts,
     select: (data) => data.data,
     enabled: isAuth,
     initialData: initialData,
@@ -36,7 +30,7 @@ export function usePosts(isAuth: boolean) {
     if (isError) console.log("Error fetching data!");
   }, [isError]);
 
-  return { data, isSuccess, isError };
+  return { data, isSuccess, isError, isLoading };
 }
 
 export default usePosts;
